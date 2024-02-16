@@ -1,7 +1,7 @@
 import unittest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
-from src.assignment_1.util import *
+from src.assignment_1.utils import *
 
 class MyTestCase(unittest.TestCase):
     def setUp(self):
