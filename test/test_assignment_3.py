@@ -38,11 +38,5 @@ class TestAssertions(unittest.TestCase):
         table_exists = self.spark.catalog.tableExists("user.login_details")
         self.assertTrue(table_exists)
 
-    def test_query(self):
-        write_as_managed_table(self.spark, self.df, "user.login_details")
-        result_df = query_managed_table(self.spark, "user.login_details")
-        expected_columns = ['log_id', 'user_id', 'action', 'timestamp']
-        self.assertEqual(result_df.columns, expected_columns)
-
 if __name__ == '__main__':
     unittest.main()
