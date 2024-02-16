@@ -1,39 +1,23 @@
-from pyspark.sql.functions import *
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, count, date_format, expr, user
 
-def actions_last_7_days(spark, df):
-    df1 = df.withColumn('timestamp', col('timestamp').cast('timestamp'))
-    result = df1.filter((col('timestamp') >= '2023-09-05') & (col('timestamp') <= '2023-09-12')) \
-        .groupBy('user_id') \
-        .count() \
-        .withColumnRenamed('count', 'actions_last_7_days')
-    result.show()
-    return result
 
-def timestamp(spark, df):
-    df2 = df.withColumn('timestamp', col('timestamp').cast('timestamp'))
-    df2a = df2.withColumn('login_date', to_date(col('timestamp')).cast('date'))
-    df2a.show()
-    df2a.write.csv(r"C:\Users\Admin\OneDrive\Desktop\Pyspark Assignment\Output_files\Q3", header=True, mode="overwrite")
-    return df2a
+def create_spark_session(app_name="assignment_3"):
+    return SparkSession.builder.appName(app_name).getOrCreate()
 
-def write_as_managed_table(spark, df, table_name):
-    spark.sql("CREATE DATABASE IF NOT EXISTS user")
-    spark.catalog.setCurrentDatabase("user")
-    df.write.mode("overwrite").saveAsTable("login_details")
+def user_login_dataframe(spark, data, columns):
+    return spark.createDataFrame(data, columns)
 
-def query_managed_table(spark, table_name):
-    query = "SELECT * FROM login_details "
-    spark.sql(query).show()
+def actions_last_7_days(df):
+    df_filtered = df.filter(col("time_stamp") >= ('2023-09-15' - expr("INTERVAL 7 DAYS")))
+    result_df = df_filtered.groupBy("user_id").agg(count("log_id").alias("actions_last_7_days"))
+    return result_df
 
-def process_data(spark, df):
-    # Calculate actions performed by each user in the last 7 days
-    result = actions_last_7_days(spark, df)
+def timestamp(df):
+    return df.withColumn("login_date", date_format("time_stamp", "yyyy-MM-dd"))
 
-    #Convert timestamp column to login_date column with yyyy-MM-dd format and save as CSV
-    transformed_df = timestamp(spark, df)
+def write_to_csv(df, path, mode='overwrite'):
+    df.write.csv(path, mode=mode)
 
-    #Write DataFrame as a managed table
-    write_as_managed_table(spark, df, "user.login_details")
-
-    # Query the managed table in the 'user' database
-    query_managed_table(spark, "user.login_details")
+def write_as_managed_table(df, mode='overwrite'):
+    df.write.mode(mode).saveAsTable(user.login_details)
