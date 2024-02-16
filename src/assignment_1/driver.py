@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
-from util import *
+from utils import *
 
 spark = SparkSession.builder.appName("assignment_1").getOrCreate()
 
