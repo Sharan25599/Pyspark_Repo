@@ -102,6 +102,6 @@ def convert_columns(new_employee_df):
     return new_employee_df.select(lowercase_columns).withColumn("load_date", current_date())
 
 #Create 2 external tables with parquet and csv formats
-# def external_tables(table_df):
-#     table_df.df.write.format("parquet").mode("overwrite").saveAsTable("parquet_table")
-#     table_df.write.format("csv").mode("overwrite").option("header", "true").saveAsTable("csv_table")
+def external_tables(table_df):
+     table_df.df.write.format("parquet").mode("overwrite").saveAsTable("parquet_table")
+     table_df.write.format("csv").mode("overwrite").option("header", "true").saveAsTable("csv_table")
