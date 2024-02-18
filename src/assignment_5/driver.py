@@ -43,4 +43,4 @@ final_df = convert_columns(new_employee_df)
 final_df.show()
 
 #Create external tables with Parquet and CSV formats
-# external_tables(table_df)
+external_tables(table_df)
