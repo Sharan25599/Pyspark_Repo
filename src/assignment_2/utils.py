@@ -26,4 +26,4 @@ def mask_card_number_udf():
 
 def masked_credit_card(df, mask_udf):
     df = df.withColumn("masked_card_number", mask_udf("card_number"))
-    df.show()
+    return df
